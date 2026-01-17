@@ -1,0 +1,140 @@
+--[[ 
+    FAKE EXPLOIT UI
+    Aimbot / Silent Aim / Fly
+    VISUAL ONLY - DOES NOTHING
+    Executor friendly (Xeno)
+--]]
+
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "FakeExploitUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main Frame
+local main = Instance.new("Frame")
+main.Size = UDim2.new(0, 360, 0, 260)
+main.Position = UDim2.new(0.5, -180, 0.5, -130)
+main.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+main.BorderSizePixel = 0
+main.Parent = gui
+
+local mainCorner = Instance.new("UICorner")
+mainCorner.CornerRadius = UDim.new(0, 12)
+mainCorner.Parent = main
+
+-- Title Bar
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 40)
+title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+title.Text = "Xeno | Combat Hub"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 18
+title.Parent = main
+
+local titleCorner = Instance.new("UICorner")
+titleCorner.CornerRadius = UDim.new(0, 12)
+titleCorner.Parent = title
+
+-- Section Label
+local section = Instance.new("TextLabel")
+section.Size = UDim2.new(1, -20, 0, 30)
+section.Position = UDim2.new(0, 10, 0, 50)
+section.BackgroundTransparency = 1
+section.Text = "Combat"
+section.TextXAlignment = Left
+section.TextColor3 = Color3.fromRGB(170, 170, 170)
+section.Font = Enum.Font.Gotham
+section.TextSize = 14
+section.Parent = main
+
+-- Toggle creator (FAKE)
+local function createToggle(name, yPos)
+    local holder = Instance.new("Frame")
+    holder.Size = UDim2.new(1, -20, 0, 40)
+    holder.Position = UDim2.new(0, 10, 0, yPos)
+    holder.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    holder.Parent = main
+
+    local hCorner = Instance.new("UICorner")
+    hCorner.CornerRadius = UDim.new(0, 8)
+    hCorner.Parent = holder
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(0.7, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.Text = name
+    label.TextXAlignment = Left
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.TextColor3 = Color3.fromRGB(220, 220, 220)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
+    label.Parent = holder
+
+    local toggle = Instance.new("TextButton")
+    toggle.Size = UDim2.new(0, 60, 0, 24)
+    toggle.Position = UDim2.new(1, -70, 0.5, -12)
+    toggle.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+    toggle.Text = "OFF"
+    toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    toggle.Font = Enum.Font.GothamBold
+    toggle.TextSize = 12
+    toggle.AutoButtonColor = false
+    toggle.Parent = holder
+
+    local tCorner = Instance.new("UICorner")
+    tCorner.CornerRadius = UDim.new(0, 6)
+    tCorner.Parent = toggle
+
+    -- Fake toggle (visual only)
+    toggle.MouseButton1Click:Connect(function()
+        if toggle.Text == "OFF" then
+            toggle.Text = "ON"
+            toggle.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
+        else
+            toggle.Text = "OFF"
+            toggle.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+        end
+        -- NO FUNCTIONAL CODE ON PURPOSE
+    end)
+end
+
+-- Toggles
+createToggle("Aimbot", 90)
+createToggle("Silent Aim", 140)
+createToggle("Fly", 190)
+
+-- Dragging
+local dragging = false
+local dragStart, startPos
+
+title.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = main.Position
+    end
+end)
+
+title.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - dragStart
+        main.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
